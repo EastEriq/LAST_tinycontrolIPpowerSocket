@@ -2,13 +2,12 @@
 
 6 outlets, max 10A total current.
 
-## commanding
+## Commanding
 
-The (poorly) documented way implies authenticated http queries on port 80. The status of the outlets is
- commanded by sending appropriate parameters to a script `outs.cgi` of the device webby.
- While much of the configuration
- can be read retrieving one among 7 xml datafiles, but there seems to be no documented way to change programmatically
- the configuration if not through the webby.
+The (poorly) documented way implies authenticated http queries on port 80. The status of the 
+outlets is commanded by sending appropriate parameters to a script `outs.cgi` of the device webby.
+ While much of the configuration can be read retrieving one among 7 xml datafiles, there seems to
+ be no documented way to change programmatically the configuration if not through the webby.
 
 The pages of the webby in any event are:
 
@@ -30,12 +29,13 @@ It should also be possible to access 20 parameters by SNMP but I'm not familiar 
 
 - [manual of the thing](https://www.ledats.pl/en/index.php?controller=attachment&id_attachment=326)
 
-The thing has a recessed Reset button. I rather think that this sends a Reset event to the sockets
+The thing has a recessed Reset button. I suppose that this sends a Reset event to the sockets
  (power cycles them if so defined in the configuration, rather than resetting some configuration).
-Whith the default configuration it does a very dumb action, it simply inverts the present on/off status
-of the 6 sockets.
+Whith the default configuration it does something very dumb: it simply inverts the present on/off
+ status of the 6 sockets. I haven't yet understood if it can do more than that.
 
-At power on, sockets are turned on only if the checkmarks of the "On Delay" in the Events page are checked.
+At power on, sockets are turned on only if the checkmarks of the "On Delay" in the Events page
+ are checked.
  Otherwise, the default power on state seems to be with all sockets off. When changed, the save configuration
  button needs to be pressed. The setting fortunately survives power down, it is probably saved in flash.
 
