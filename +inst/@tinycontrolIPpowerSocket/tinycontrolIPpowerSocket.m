@@ -1,4 +1,4 @@
-classdef tinycontrolIPpowerSocket < handle
+classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     
     properties
         Host='192.168.1.100'; % ip or hostname
@@ -8,7 +8,7 @@ classdef tinycontrolIPpowerSocket < handle
     end
     
     properties (Hidden)
-        Options
+        Options % weboptions() for web queries to the device, e.g. User, Password, Timeout
     end
     
     methods
@@ -29,11 +29,13 @@ classdef tinycontrolIPpowerSocket < handle
         
         % getters and setters
         function set.User(T,user)
+            T.User=user;
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',1);
         end
         
         function set.Password(T,password)
+            T.Password=password;
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',1);
         end
