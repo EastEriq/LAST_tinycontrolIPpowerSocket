@@ -25,6 +25,8 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             end
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
+            T.Options=weboptions('Username',T.User,'Password',T.Password,...
+                'Timeout',1);
         end
         
         % getters and setters

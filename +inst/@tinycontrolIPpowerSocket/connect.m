@@ -18,6 +18,7 @@ function connect(T,host,user,password)
         'Timeout',1);
 
     % load configuration (setting at most some new output values)
+    T.PhysicalId=T.Name; % to allow the same naming mechanism as other drivers...
     T.loadConfig(T.configFileName('connect'))
     
 end
