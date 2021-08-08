@@ -23,7 +23,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             if exist('id','var')
                 T.Id=id;
             end
-            % load configuration
+            % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
         end
         
@@ -47,6 +47,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 for i=1:6
                     o(i)=(resp(strfind(resp,sprintf('<out%d>',i-1))+6)=='1');
                 end
+                T.LastError='';
             catch
                 T.reportError(sprintf('reading status of switch %s failed, offline?',T.Id));
                 o=[];
@@ -62,6 +63,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                             T.Options);
                     end
                 end
+                T.LastError='';
             catch
                 T.reportError(sprintf('setting status of switch %s failed, offline?',T.Id));
             end
@@ -71,6 +73,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             try
                 boardpage=webread(T.makeUrl('board.xml'),T.Options);
                 m=boardpage(strfind(boardpage,'<b6>')+4:strfind(boardpage,'</b6>')-1);
+                T.LastError='';
             catch
                 T.reportError(sprintf('reading MAC of switch %s failed, offline?',T.Id));
                 m=[];
@@ -83,6 +86,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 n=boardpage(strfind(boardpage,'<b7>')+4:strfind(boardpage,'</b7>')-1);
                 % the retrieved name is 15 char long, right padded with spaces
                 n=strtrim(n);
+                T.LastError='';
             catch
                 T.reportError(sprintf('reading name of switch %s failed, offline?',T.Id));
                 n=[];

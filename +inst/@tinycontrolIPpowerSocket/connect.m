@@ -3,9 +3,6 @@ function connect(T,host,user,password)
 % This is added  merely for the convenience of allowing a separate
 % 'create' and 'connect' configuration, like other LAST_Handle objects
 
-    % load configuration
-    T.loadConfig(T.configFileName('connect'))
-    
     % if the connection parameters are given explicitely as additional
     %  arguments, they override eventual configuration or default values
     if exist('host','var')
@@ -17,7 +14,10 @@ function connect(T,host,user,password)
     if exist('password','var')
         T.Password=password;
     end
-
     T.Options=weboptions('Username',T.User,'Password',T.Password,...
         'Timeout',1);
+
+    % load configuration (setting at most some new output values)
+    T.loadConfig(T.configFileName('connect'))
+    
 end
