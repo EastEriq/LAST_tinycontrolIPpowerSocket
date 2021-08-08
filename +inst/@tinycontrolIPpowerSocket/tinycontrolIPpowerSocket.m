@@ -29,6 +29,11 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 'Timeout',1);
         end
         
+        % destructor, allowing for a shutdown status
+        function delete(T)
+            T.loadConfig(T.configFileName('destroy'))
+        end
+        
         % getters and setters
         function set.User(T,user)
             T.User=user;
