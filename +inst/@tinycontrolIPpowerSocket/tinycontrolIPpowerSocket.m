@@ -56,7 +56,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 end
                 T.LastError='';
             catch
-                T.reportError(sprintf('reading status of switch %s failed, offline?',T.Id));
+                T.reportError('reading status of switch %s failed, offline?',T.Id);
                 o=[];
             end
         end
@@ -72,7 +72,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 end
                 T.LastError='';
             catch
-                T.reportError(sprintf('setting status of switch %s failed, offline?',T.Id));
+                T.reportError('setting status of switch %s failed, offline?',T.Id);
             end
         end
         
@@ -82,7 +82,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 m=boardpage(strfind(boardpage,'<b6>')+4:strfind(boardpage,'</b6>')-1);
                 T.LastError='';
             catch
-                T.reportError(sprintf('reading MAC of switch %s failed, offline?',T.Id));
+                T.reportError('reading MAC of switch %s failed, offline?',T.Id);
                 m=[];
             end
         end
@@ -95,7 +95,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 n=strtrim(n);
                 T.LastError='';
             catch
-                T.reportError(sprintf('reading name of switch %s failed, offline?',T.Id));
+                T.reportError('reading name of switch %s failed, offline?',T.Id);
                 n=[];
             end
         end
