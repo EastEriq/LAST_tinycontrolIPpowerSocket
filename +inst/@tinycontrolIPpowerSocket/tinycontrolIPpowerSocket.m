@@ -31,7 +31,11 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
         
         % destructor, allowing for a shutdown status
         function delete(T)
-            T.loadConfig(T.configFileName('destroy'))
+            % Better not. For some reason an old object may be
+            %  deleted after a new one is created, causing the
+            %  shutdown config to be enforced just after the same
+            %  device is turned on
+            % T.loadConfig(T.configFileName('destroy'))
         end
         
         % getters and setters
