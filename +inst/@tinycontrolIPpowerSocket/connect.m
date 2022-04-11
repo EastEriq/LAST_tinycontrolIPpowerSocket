@@ -15,7 +15,7 @@ function connect(T,host,user,password)
         T.Password=password;
     end
     T.Options=weboptions('Username',T.User,'Password',T.Password,...
-        'Timeout',1);
+        'Timeout',T.Timeout);
 
     % load configuration (setting at most some new output values)
     T.PhysicalId=T.Name; % to allow the same naming mechanism as other drivers...
