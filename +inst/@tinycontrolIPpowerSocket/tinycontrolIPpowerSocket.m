@@ -12,6 +12,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     
     % these properties are hidden because it takes time to retrieve them:
     properties (Hidden,SetAccess=private)
+        Sensors % 1-wire sensors and board temperature
         MAC % mac address of the device
         Name % name of the device, as flashed from the webby config
         Options % weboptions() for web queries to the device, e.g. User, Password, Timeout
@@ -48,13 +49,13 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
         end
-        
+
         function set.Password(T,password)
             T.Password=password;
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
         end
-        
+
         function o=get.Outputs(T)
             try
                 resp = webread(T.makeUrl('st0.xml'),T.Options);
@@ -83,7 +84,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 T.reportError('setting status of switch %s failed, offline?',T.Id);
             end
         end
-        
+
         function m=get.MAC(T)
             try
                 boardpage=webread(T.makeUrl('board.xml'),T.Options);
@@ -94,7 +95,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 m=[];
             end
         end
-        
+
         function n=get.Name(T)
             try
                 boardpage=webread(T.makeUrl('board.xml'),T.Options);
@@ -107,7 +108,30 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 n=[];
             end
         end
-        
+
+        function b=get.Sensors(T)
+            try
+                resp = webread(T.makeUrl('st0.xml'),T.Options);
+                ai=nan(1,9);
+                for i=1:numel(ai)
+                    k1=strfind(resp,sprintf('<ia%d>',i-1))+5;
+                    k2=strfind(resp,sprintf('</ia%d>',i-1))-1;
+                    ai(i)=str2double(resp(k1:k2));
+                end
+                b.BoardTemperature=ai(1)/10;
+                % factor /10 guessed here, we'll see with real sensors
+                %  Apparently, -600 is what the webby displays as N/A 
+                b.TemperatureSensors=ai(2:7)/10;
+                b.VoltageSensor=ai(8)/100;
+                b.Vsupply=ai(9)/10;
+                T.LastError='';
+
+            catch
+                T.reportError('reading name of switch %s failed, offline?',T.Id);
+                b=[];
+            end
+        end
+
     end
-           
+
 end
