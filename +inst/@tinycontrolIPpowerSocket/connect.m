@@ -21,4 +21,6 @@ function connect(T,host,user,password)
     T.PhysicalId=T.Name; % to allow the same naming mechanism as other drivers...
     T.loadConfig(T.configFileName('connect'))
     
+    T.Connected=true;
+    
 end

@@ -1,39 +1,45 @@
 classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     
-    properties
+    properties (Description='api')
+        Connected logical = false;
+    end
+
+    properties (Description='api,must-be-connected')
         Outputs=false(1,6);  % power at each socket, false=OFF/true=ON
     end
-    
+
+    properties(SetAccess=private,Description='api,must-be-connected')
+        Sensors % 1-wire sensors and board temperature
+    end
+
     properties (Hidden)
         Host='192.168.1.100'; % ip or hostname
         User='admin'; % username for connecting, usually 'admin'
         Password='admin' % password for the controlling user (should match what flashed in the device)
     end
-    
+
     % these properties are hidden because it takes time to retrieve them:
     properties (Hidden,SetAccess=private)
-        Sensors % 1-wire sensors and board temperature
         MAC % mac address of the device
         Name % name of the device, as flashed from the webby config
         Options % weboptions() for web queries to the device, e.g. User, Password, Timeout
     end
-    
+
     properties (Hidden, Constant)
         Timeout=2; % timeout for webreads, in seconds
     end
-    
+
     methods
         % creator
-        function T=tinycontrolIPpowerSocket(id)
-            if exist('id','var')
-                T.Id=id;
-            end
+        function T=tinycontrolIPpowerSocket(Locator)
+            id = Locator.CanonicalLocation;
+            T.Id=id;
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
         end
-        
+
         % destructor, allowing for a shutdown status
         function delete(T)
             % Better not. For some reason an old object may be
@@ -42,7 +48,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             %  device is turned on
             % T.loadConfig(T.configFileName('destroy'))
         end
-        
+
         % getters and setters
         function set.User(T,user)
             T.User=user;
@@ -69,7 +75,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 o=[];
             end
         end
-        
+
         function set.Outputs(T,outputs)
             try
                 currentOutputs=T.Outputs;
@@ -133,5 +139,10 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
         end
 
     end
+    
+    methods(Description='api,must-be-connected')
+        connect(T)
+    end
+
 
 end
