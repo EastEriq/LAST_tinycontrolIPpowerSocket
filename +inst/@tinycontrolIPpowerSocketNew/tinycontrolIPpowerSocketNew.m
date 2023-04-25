@@ -19,10 +19,6 @@ classdef tinycontrolIPpowerSocketNew < obs.LAST_Handle
 
     properties (Hidden,SetAccess=private)
         HttpClient; % the obs.api.HttpClient object responsible for transport
-    end
-    
-    properties(Hidden, SetAccess=private,Description='api,must-be-connected')
-    % these properties are hidden because it takes time to retrieve them:
         MAC % mac address of the device
         Name % name of the device, as flashed from the webby config
     end
