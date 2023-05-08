@@ -32,7 +32,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     methods
         % creator
         function T=tinycontrolIPpowerSocket(Locator)
-            id = Locator.CanonicalLocation;
+            id = Locator.Canonical;
             T.Id=id;
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))

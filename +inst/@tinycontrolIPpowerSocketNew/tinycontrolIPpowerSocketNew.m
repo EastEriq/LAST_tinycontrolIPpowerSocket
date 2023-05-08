@@ -33,7 +33,7 @@ classdef tinycontrolIPpowerSocketNew < obs.LAST_Handle
             % Now REQUIRES locator. Think at implications
             if exist('Locator','var') 
                 if isa(Locator,'obs.api.Locator')
-                    id = Locator.CanonicalLocation;
+                    id = Locator.Canonical;
                 else
                     id=Locator;
                 end
