@@ -44,7 +44,7 @@ classdef tinycontrolIPpowerSocketNew < obs.LAST_Handle
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
             % fill initial status of untyped .Connected
-            T.Connected=false;
+            T.Connected=true;
         end
 
         function delete(T)

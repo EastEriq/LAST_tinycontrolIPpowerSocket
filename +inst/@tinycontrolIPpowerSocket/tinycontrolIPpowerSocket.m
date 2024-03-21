@@ -31,13 +31,21 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
     methods
         % creator
-        function T=tinycontrolIPpowerSocket(Locator)
-            id = Locator.Canonical;
+        function T=tinycontrolIPpowerSocket(id)
+            % No support for pswitch Locator, 
+            %  https://github.com/blumzi/LAST_Api/issues/29
+            %  https://github.com/blumzi/LAST_Api/issues/36
+            %  we use for now the traditional id form
+            % id = Locator.Canonical;
+            if exist('id','var')
+                T.Id=id;
+            end
             T.Id=id;
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
+            T.connect;
         end
 
         % destructor, allowing for a shutdown status
