@@ -1,4 +1,8 @@
 classdef tinycontrolIPpowerSocket < obs.LAST_Handle
+    % interfacing with the power socket using matlab's native
+    %  webread/webwrite. I have the slight suspect that they are based on
+    %  obscure callbacks, because we experience occasional "offline?"
+    %  answers when there is messenger traffic, even with Timeout=4sec.
     
     properties
         Outputs=false(1,6);  % power at each socket, false=OFF/true=ON
@@ -19,7 +23,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     end
     
     properties (Hidden, Constant)
-        Timeout=2; % timeout for webreads, in seconds
+        Timeout=4; % timeout for webreads, in seconds
     end
     
     methods
@@ -125,9 +129,8 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 b.VoltageSensor=ai(8)/100;
                 b.Vsupply=ai(9)/10;
                 T.LastError='';
-
             catch
-                T.reportError('reading name of switch %s failed, offline?',T.Id);
+                T.reportError('reading sensor page of switch %s failed, offline?',T.Id);
                 b=[];
             end
         end
