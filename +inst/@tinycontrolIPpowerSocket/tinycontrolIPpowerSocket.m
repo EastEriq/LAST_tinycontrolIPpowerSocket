@@ -29,6 +29,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
     methods
         % creator
         function T=tinycontrolIPpowerSocket(id)
+            T.GitVersion=obs.util.tools.getgitversion(mfilename('fullpath'));
             if exist('id','var')
                 T.Id=id;
             end
