@@ -22,7 +22,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
         Options % weboptions() for web queries to the device, e.g. User, Password, Timeout
     end
     
-    properties (Hidden, Constant)
+    properties (Hidden)
         Timeout=4; % timeout for webreads, in seconds
     end
     
@@ -57,6 +57,12 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
         function set.Password(T,password)
             T.Password=password;
+            T.Options=weboptions('Username',T.User,'Password',T.Password,...
+                'Timeout',T.Timeout);
+        end
+        
+        function set.Timeout(T,timeout)
+            T.Timeout=timeout;
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
         end
