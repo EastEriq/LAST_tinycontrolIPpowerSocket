@@ -48,8 +48,8 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             %  already in the workspace. It is important to delete, rather
             %  than to recycle, because the timer associated to a destroyed
             %  object will reference an invalid serial resource
-            delete(timerfind('Name','PswitchInquirer'));
-            T.HttpCollector=timer('Name','PswitchInquirer',...
+            delete(timerfind('Name',['PswitchInquirer_',T.Id]));
+            T.HttpCollector=timer('Name',['PswitchInquirer_',T.Id],...
                         'ExecutionMode','SingleShot','BusyMode','Queue',...
                         'StartDelay',0,'TimerFcn',@(~,~)T.queryCallback);
        end
