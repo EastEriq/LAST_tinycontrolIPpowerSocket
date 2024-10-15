@@ -20,6 +20,11 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
         MAC % mac address of the device
         Name % name of the device, as flashed from the webby config
         Options % weboptions() for web queries to the device, e.g. User, Password, Timeout
+        % Add a timer object for querying the switch with
+        %  noninterruptible callbacks
+        QueryHttpPage  char;
+        HttpReply char;
+        HttpCollector  timer;
     end
     
     properties (Hidden)
@@ -37,7 +42,17 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             T.loadConfig(T.configFileName('create'))
             T.Options=weboptions('Username',T.User,'Password',T.Password,...
                 'Timeout',T.Timeout);
-        end
+             % set the callback function here, instead of creating anew the
+            %  timer. I have no good solution for deleting the timer when 
+            %  clearing the object, so I try to delete it if it is
+            %  already in the workspace. It is important to delete, rather
+            %  than to recycle, because the timer associated to a destroyed
+            %  object will reference an invalid serial resource
+            delete(timerfind('Name','PswitchInquirer'));
+            T.HttpCollector=timer('Name','PswitchInquirer',...
+                        'ExecutionMode','SingleShot','BusyMode','Queue',...
+                        'StartDelay',0,'TimerFcn',@(~,~)T.queryCallback);
+       end
         
         % destructor, allowing for a shutdown status
         function delete(T)
@@ -69,7 +84,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
         function o=get.Outputs(T)
             try
-                resp = webread(T.makeUrl('st0.xml'),T.Options);
+                resp = T.webquery('st0.xml');
                 o=false(1,6);
                 for i=1:6
                     o(i)=(resp(strfind(resp,sprintf('<out%d>',i-1))+6)=='1');
@@ -98,7 +113,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
         function m=get.MAC(T)
             try
-                boardpage=webread(T.makeUrl('board.xml'),T.Options);
+                boardpage=T.webquery('board.xml');
                 m=boardpage(strfind(boardpage,'<b6>')+4:strfind(boardpage,'</b6>')-1);
                 T.LastError='';
             catch
@@ -109,7 +124,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
         function n=get.Name(T)
             try
-                boardpage=webread(T.makeUrl('board.xml'),T.Options);
+                boardpage=T.webquery('board.xml');
                 n=boardpage(strfind(boardpage,'<b7>')+4:strfind(boardpage,'</b7>')-1);
                 % the retrieved name is 15 char long, right padded with spaces
                 n=strtrim(n);
@@ -122,7 +137,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
 
         function b=get.Sensors(T)
             try
-                resp = webread(T.makeUrl('st0.xml'),T.Options);
+                resp = T.webquery('st0.xml');
                 ai=nan(1,9);
                 for i=1:numel(ai)
                     k1=strfind(resp,sprintf('<ia%d>',i-1))+5;
