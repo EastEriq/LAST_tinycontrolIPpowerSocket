@@ -144,6 +144,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                     k2=strfind(resp,sprintf('</ia%d>',i-1))-1;
                     ai(i)=str2double(resp(k1:k2));
                 end
+                ai(ai==-600)=NaN;
                 b.BoardTemperature=ai(1)/10;
                 % factor /10 guessed here, we'll see with real sensors
                 %  Apparently, -600 is what the webby displays as N/A 
