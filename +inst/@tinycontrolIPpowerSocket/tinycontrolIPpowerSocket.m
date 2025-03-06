@@ -90,9 +90,21 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                     o(i)=(resp(strfind(resp,sprintf('<out%d>',i-1))+6)=='1');
                 end
                 T.LastError='';
-            catch
+            catch CommandError
                 T.reportError('reading status of switch %s failed, offline?',T.Id);
                 o=[];
+                if T.Verbose>1
+                    % construct a textual stack for reporting
+                    CommandStack=CommandError.stack;
+                    knownLevels=0;
+                    TextStack='';
+                    for k=1:length(CommandStack)-knownLevels
+                        TextStack=[TextStack,...
+                            sprintf('\n at line %d of %s',...
+                            CommandStack(k).line,CommandStack(k).name)];
+                    end
+                    T.reportError('%s%s',CommandError.message,TextStack); 
+                end
             end
         end
         
@@ -101,8 +113,7 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
                 currentOutputs=T.Outputs;
                 for i=1:min(numel(outputs),6)
                     if outputs(i) ~= currentOutputs(i)
-                        webwrite(T.makeUrl(sprintf('outs.cgi?out%d=%d',i-1,outputs(i))),...
-                            T.Options);
+                        T.webquery(sprintf('outs.cgi?out%d=%d',i-1,outputs(i)));
                     end
                 end
                 T.LastError='';

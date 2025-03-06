@@ -4,8 +4,7 @@ function o=OutputN(T,i,offon)
     %  is a boolean for the state)
     if nargin==3
         try
-            webwrite(T.makeUrl(sprintf('outs.cgi?out%d=%d',i-1,offon)),...
-                 T.Options);
+            T.webquery(sprintf('outs.cgi?out%d=%d',i-1,offon));
         catch
             T.reportError('writing state of output %d of switch %s failed, offline?',...
                 i,T.Id);
