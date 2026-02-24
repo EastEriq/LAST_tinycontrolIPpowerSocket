@@ -66,20 +66,17 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
         % getters and setters
         function set.User(T,user)
             T.User=user;
-            T.Options=weboptions('Username',T.User,'Password',T.Password,...
-                'Timeout',T.Timeout);
+            T.setweboptions;
         end
 
         function set.Password(T,password)
             T.Password=password;
-            T.Options=weboptions('Username',T.User,'Password',T.Password,...
-                'Timeout',T.Timeout);
+            T.setweboptions
         end
         
         function set.Timeout(T,timeout)
             T.Timeout=timeout;
-            T.Options=weboptions('Username',T.User,'Password',T.Password,...
-                'Timeout',T.Timeout);
+            T.setweboptions
         end
 
         function o=get.Outputs(T)
