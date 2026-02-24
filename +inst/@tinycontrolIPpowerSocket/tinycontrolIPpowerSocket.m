@@ -40,9 +40,12 @@ classdef tinycontrolIPpowerSocket < obs.LAST_Handle
             end
             % load configuration (including Host, [user, [password]])
             T.loadConfig(T.configFileName('create'))
-            T.Options=weboptions('Username',T.User,'Password',T.Password,...
-                'Timeout',T.Timeout);
-             % set the callback function here, instead of creating anew the
+            % this is the same as in the private method .setwebobptions,
+            %  which I can't use in the creator
+            T.Options=weboptions('Timeout',T.Timeout,...
+                'HeaderFields',{'Authorization', ...
+                ['Basic ' matlab.net.base64encode([T.User ':' T.Password])]});
+            % set the callback function here, instead of creating anew the
             %  timer. I have no good solution for deleting the timer when 
             %  clearing the object, so I try to delete it if it is
             %  already in the workspace. It is important to delete, rather
